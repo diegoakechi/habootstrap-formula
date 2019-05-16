@@ -18,7 +18,7 @@
 
 # See also http://en.opensuse.org/openSUSE:Specfile_guidelines
 %define fname cluster
-%define fdir  %{_datadir}/susemanager/formulas
+%define fdir  %{_datadir}/salt-formulas
 
 Name:           habootstrap-formula
 Version:        0.1.0
@@ -37,24 +37,13 @@ Requires:       salt-shaptools
 %description
 HA cluster (crmsh) deployment salt formula
 
-# package to deploy on SUMA specific path.
-%package suma
-Summary:        HA cluster (crmsh) deployment salt formula (SUMA specific)
-Requires:       salt-shaptools
-
-%description suma
-HA Cluster Bootstrap Salt Formula for SUSE Manager. Used to configure a basic HA cluster.
-
 %prep
 %setup -q
 
 %build
 
 %install
-mkdir -p %{buildroot}/srv/salt/
-cp -R %{fname} %{buildroot}/srv/salt
 
-# SUMA Specific
 mkdir -p %{buildroot}%{fdir}/states/%{fname}
 mkdir -p %{buildroot}%{fdir}/metadata/%{fname}
 cp -R %{fname} %{buildroot}%{fdir}/states
@@ -64,7 +53,7 @@ then
   cp -R metadata.yml %{buildroot}%{fdir}/metadata/%{fname}
 fi
 
-%files
+%files 
 %defattr(-,root,root,-)
 # %license macro is not available on older releases
 %if 0%{?sle_version} <= 120300
@@ -73,28 +62,12 @@ fi
 %license LICENSE
 %endif
 %doc README.md
-/srv/salt/%{fname}
-
-%dir %attr(0755, root, salt) /srv/salt
-
-
-%files suma
-%defattr(-,root,root,-)
-# %license macro is not available on older releases
-%if 0%{?sle_version} <= 120300
-%doc LICENSE
-%else
-%license LICENSE
-%endif
-%doc README.md
-%dir %{_datadir}/susemanager
 %dir %{fdir}
 %dir %{fdir}/states
 %dir %{fdir}/metadata
 %{fdir}/states/%{fname}
 %{fdir}/metadata/%{fname}
 
-%dir %attr(0755, root, salt) %{_datadir}/susemanager
 %dir %attr(0755, root, salt) %{fdir}
 %dir %attr(0755, root, salt) %{fdir}/states
 %dir %attr(0755, root, salt) %{fdir}/metadata
